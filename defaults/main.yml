@@ -1,3 +1,4 @@
+tmp_prefix: "/tmp/nvm"
 nodejs_version: node
 
 

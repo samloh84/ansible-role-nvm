@@ -1,16 +1,28 @@
 - file:
-    path: "/tmp/nvm"
+    path: "{{ tmp_prefix }}"
     state: directory
+    mode: 0755
 
 - get_url:
     url: https://raw.githubusercontent.com/creationix/nvm/v0.32.0/install.sh
     checksum: sha256:0b0606db84327e7ed1b134c1bf57f78531690bb653846ab328a040d31e31fa59
-    dest: "/tmp/nvm/install.sh"
+    dest: "{{ tmp_prefix }}/install.sh"
 
-- script: /tmp/nvm/install.sh
+- script: "{{ tmp_prefix }}/install.sh"
 
-- shell: source ~/.nvm/nvm.sh && nvm install {{ nodejs_version }}
+- shell: "source ~/.nvm/nvm.sh && nvm install {{ nodejs_version }}"
 
 - file:
-    path: "/tmp/nvm"
+    path: "{{ tmp_prefix }}"
     state: absent
+
+- name: "Fix Permissions"
+  shell: "{{ item }}"
+  args:
+    chdir: "{{ prefix }}"
+  with_items:
+    - "chown -R root:root ."
+    - "find . -perm -u+r -exec chmod a+r {} \\;"
+    - "find . -perm -u+w -exec chmod a+w {} \\;"
+    - "find . -perm -u+x -exec chmod a+x {} \\;"
+
