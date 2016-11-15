@@ -11,6 +11,8 @@
 - script: "{{ tmp_prefix }}/install.sh"
 
 - shell: "source ~/.nvm/nvm.sh && nvm install {{ nodejs_version }}"
+  args:
+    executable: /bin/bash
 
 - file:
     path: "{{ tmp_prefix }}"
